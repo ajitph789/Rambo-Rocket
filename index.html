@@ -2,213 +2,175 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aviator – Green UI (Fun Mode)</title>
+<title>Rocket Crash Game</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <style>
-:root{
-  --bg:#020617;
-  --panel:#020617;
-  --green:#22c55e;
-  --green2:#16a34a;
-  --yellow:#facc15;
-  --red:#ef4444;
-  --text:#e5e7eb;
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0}
-
-body{
-  background:#000;
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  display:flex;
-  justify-content:center;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at bottom, #0f3d2e, #000);
+  color: #fff;
+  overflow: hidden;
 }
 
-.app{
-  width:100%;
-  max-width:420px;
-  height:100%;
-  background:linear-gradient(180deg,#020617,#000);
-  display:flex;
-  flex-direction:column;
+#game {
+  max-width: 420px;
+  height: 100vh;
+  margin: auto;
+  position: relative;
 }
 
-/* TOP BAR */
-.topbar{
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.brand{
-  font-weight:900;
-  letter-spacing:.5px;
-}
-.balance{
-  color:var(--green);
-  font-weight:900;
+#top {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  font-weight: bold;
 }
 
-/* HISTORY */
-.history{
-  display:flex;
-  gap:8px;
-  padding:8px 10px;
-  overflow-x:auto;
-}
-.pill{
-  padding:5px 10px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-  background:#020617;
-}
-.pill.low{color:var(--red)}
-.pill.high{color:var(--green)}
-
-/* STAGE */
-.stage{
-  position:relative;
-  flex:1;
-  overflow:hidden;
-  background:
-    radial-gradient(120% 120% at 0% 100%, rgba(34,197,94,.35), transparent 60%),
-    linear-gradient(#020617,#000);
-}
-canvas{position:absolute;inset:0}
-
-.mult{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:clamp(44px,11vw,68px);
-  font-weight:900;
+#rocket {
+  font-size: 72px;
+  position: absolute;
+  left: 20px;
+  top: 120px;
+  transition: transform 0.05s linear;
 }
 
-/* ROCKET (AVIATOR STYLE) */
-.rocket{
-  position:absolute;
-  width:34px;
-  height:70px;
-  background:linear-gradient(#fff,#d1d5db);
-  border-radius:50% 50% 40% 40%;
-  box-shadow:0 0 18px var(--green);
-}
-.rocket:before,.rocket:after{
-  content:"";
-  position:absolute;
-  top:34px;
-  width:12px;
-  height:24px;
-  background:var(--green2);
-}
-.rocket:before{
-  left:-12px;
-  clip-path:polygon(100% 0,0 50%,100% 100%);
-}
-.rocket:after{
-  right:-12px;
-  clip-path:polygon(0 0,100% 50%,0 100%);
-}
-.flame{
-  position:absolute;
-  bottom:-20px;
-  left:50%;
-  transform:translateX(-50%);
-  width:14px;
-  height:24px;
-  background:linear-gradient(var(--yellow),var(--red));
-  border-radius:50%;
-  animation:flicker .15s infinite alternate;
-}
-@keyframes flicker{
-  from{height:14px}
-  to{height:26px}
+#multiplier {
+  position: absolute;
+  top: 45%;
+  width: 100%;
+  text-align: center;
+  font-size: 42px;
+  font-weight: bold;
 }
 
-/* HINT */
-.hintbox{
-  position:absolute;
-  right:10px;
-  bottom:10px;
-  background:rgba(2,6,23,.85);
-  padding:8px 10px;
-  border-radius:10px;
-  font-size:12px;
+#controls {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
-/* CONTROLS */
-.controls{
-  padding:10px;
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:8px;
-  background:#020617;
-}
-.betbox{
-  grid-column:1/-1;
-  display:flex;
-  gap:8px;
-  background:#000;
-  padding:8px;
-  border-radius:12px;
-}
-.betbox input{
-  flex:1;
-  background:#000;
-  border:none;
-  color:#fff;
-  text-align:center;
-  font-weight:900;
-  font-size:16px;
-}
-button{
-  border:none;
-  border-radius:14px;
-  padding:14px;
-  font-weight:900;
-}
-.start{background:var(--green2);color:#052e16}
-.stop{background:var(--yellow);color:#422006}
-.hintbtn{background:#0ea5e9;color:#082f49}
-
-/* LOW COINS */
-.msg{
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.85);
-  font-size:18px;
-  font-weight:900;
+button, input {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
 }
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  opacity:.6;
-  padding:6px;
+button {
+  background: #00ff88;
+  font-weight: bold;
+}
+
+#msg {
+  position: fixed;
+  bottom: 90px;
+  width: 100%;
+  text-align: center;
+  color: #ff5252;
+  font-weight: bold;
 }
 </style>
 </head>
 
 <body>
-<div class="app">
 
-  <div class="topbar">
-    <div class="brand">AVIATOR</div>
-    <div class="balance">🪙 <span id="coins">1000</span></div>
+<div id="game">
+  <div id="top">
+    <div>AVIATOR</div>
+    <div>💰 <span id="coins">1000</span></div>
   </div>
 
-  <div class="history" id="history"></div>
+  <div id="rocket">🚀</div>
+  <div id="multiplier">1.00x</div>
+</div>
 
-  <div class="stage" id="stage">
-    <canvas id="graph"></canvas>
-    <div class="rocket" id="rocket"><div class="flame"></div></div>
-    <div class="mult" id="mult">1.0
-  
+<div id="msg"></div>
+
+<div id="controls">
+  <input id="bet" type="number" value="10" min="10">
+  <button id="start">START</button>
+  <button id="cashout" disabled>CASHOUT</button>
+</div>
+
+<script>
+let coins = 1000;
+let bet = 10;
+let multiplier = 1.0;
+let flying = false;
+let crashAt = 0;
+let interval;
+
+const rocket = document.getElementById("rocket");
+const multiEl = document.getElementById("multiplier");
+const coinsEl = document.getElementById("coins");
+const msg = document.getElementById("msg");
+const startBtn = document.getElementById("start");
+const cashBtn = document.getElementById("cashout");
+
+function startGame() {
+  bet = Number(document.getElementById("bet").value);
+
+  if (bet < 10) {
+    msg.innerText = "Minimum bet is 10 coins";
+    return;
+  }
+  if (coins < bet) {
+    msg.innerText = "Add coins to play";
+    return;
+  }
+
+  msg.innerText = "";
+  coins -= bet;
+  coinsEl.innerText = coins;
+
+  multiplier = 1.0;
+  crashAt = (Math.random() * 6 + 1.5).toFixed(2);
+  flying = true;
+
+  startBtn.disabled = true;
+  cashBtn.disabled = false;
+
+  interval = setInterval(() => {
+    multiplier += 0.02;
+    multiEl.innerText = multiplier.toFixed(2) + "x";
+    rocket.style.transform = `translate(${multiplier * 12}px, -${multiplier * 25}px)`;
+
+    if (multiplier >= crashAt) {
+      crash();
+    }
+  }, 50);
+}
+
+function cashout() {
+  if (!flying) return;
+  let win = Math.floor(bet * multiplier);
+  coins += win;
+  coinsEl.innerText = coins;
+  msg.innerText = "Cashed out: +" + win;
+  stopGame();
+}
+
+function crash() {
+  msg.innerText = "💥 CRASH at " + multiplier.toFixed(2) + "x";
+  stopGame();
+}
+
+function stopGame() {
+  clearInterval(interval);
+  flying = false;
+  startBtn.disabled = false;
+  cashBtn.disabled = true;
+  rocket.style.transform = "translate(0,0)";
+}
+
+startBtn.onclick = startGame;
+cashBtn.onclick = cashout;
+</script>
+
+</body>
+</html>
